@@ -8,13 +8,20 @@ namespace ManabiLog.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            var studyRecord = new StudyRecord();
+            studyRecord.Tags = new List<Tag.Name> { "C#", "MVC" };
+            return View(studyRecord);
         }
 
         public IActionResult Privacy()
         {
             return View();
         }
+
+        // public IActionResult Check()
+        // {
+        //     return View();
+        // }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
