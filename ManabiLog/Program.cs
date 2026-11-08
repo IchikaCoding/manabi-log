@@ -1,4 +1,8 @@
+using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
+var connectionString = builder.Configuration.GetConnectionString("ManabiLogContext") ?? throw new InvalidOperationException("Connection string 'ManabiLogContext' not found.");
+
+builder.Services.AddDbContext<ManabiLogContext>(options => options.UseSqlServer(connectionString));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
