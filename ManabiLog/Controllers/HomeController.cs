@@ -8,9 +8,21 @@ namespace ManabiLog.Controllers
     {
         public IActionResult Index()
         {
-            var studyRecord = new StudyRecord();
-            studyRecord.Tags = new List<Tag.Name> { "C#", "MVC" };
-            return View(studyRecord);
+            var testStudyRecord = new StudyRecord()
+            {
+                Id = 1,
+                StudyDate = new DateOnly(2026, 11, 8),
+                Title = "GitHub Actionsを使ってみる！",
+                Tags = new List<Tag>()
+                {
+                    new Tag(){Id = 1, Name = "GitHub"},
+                    // もう一個Tag追加する予定
+                    new Tag(){Id = 2, Name = "C#"},
+                }
+
+            };
+            // studyRecord.Tags = new
+            return View(testStudyRecord);
         }
 
         public IActionResult Privacy()
