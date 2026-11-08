@@ -10,6 +10,6 @@ namespace ManabiLog.Models
         // 最初から空のListを作成しておくと、中身が0件なだけでforeachでもエラーが出ない✨️
         // どうしてここでStudyRecordを参照するのか？
         // 👉️お互いが参照することで多対多の関係になる。EF Coreが自動で中間テーブルを作成してくれるらしい。
-        public List<StudyRecord> studyRecords { get; set; } = new();
+        public List<StudyRecord> StudyRecords { get; set; } = new();
     }
 }
