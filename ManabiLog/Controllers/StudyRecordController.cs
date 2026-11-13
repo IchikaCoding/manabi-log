@@ -12,6 +12,43 @@ public class StudyRecordController : Controller
         _context = context;
     }
 
+    // ナビゲーションプロパティを使う
+    public async Task PracticeNavigation()
+    {
+        // recordには何が入っていますか？
+        StudyRecord record = await _context.StudyRecord.FirstAsync();
+        var seedData = new JunctionTableModel
+        {
+            // IDは省略。なぜなら、外部キーだから？
+            studyRecord = record,
+            tag = new Tag { Name = "ナビゲーション練習" },
+            AddedTagAt = DateTime.Now
+        };
+        _context.StudyRecordTags.Add(seedData);
+        await _context.SaveChangesAsync();
+    }
+
+    // ナビゲーションプロパティを使って表示してみよう！
+    public async Task<IActionResult> PracticeShow()
+    {
+        // 〇〇のリストを作成する
+        var list = await _context.StudyRecordTags.Include(item => item.studyRecord).Include(item => item.tag).ToListAsync();
+        // ! Listにデータ入れたら画面に表示できそう
+        var array = new List<ViewModel>();
+        // 〇〇から一つずつデータ取得
+        foreach (JunctionTableModel item in list)
+        {
+            // 1件ずつの〇〇からタイトルとか、タグの名前も取れそう
+            var title = item.studyRecord.Title;
+            var name = item.tag.Name;
+            var viewModel = new ViewModel();
+            viewModel.Title = title;
+            viewModel.Name = name;
+            array.Add(viewModel);
+        }
+        return View(array);
+    }
+
     // GET: STUDYRECORDS
     public async Task<IActionResult> Index()
     {

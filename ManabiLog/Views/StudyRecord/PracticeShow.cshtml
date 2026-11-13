@@ -1,0 +1,15 @@
+@model IEnumerable<ManabiLog.Models.ViewModel>
+
+@{
+    ViewData["Title"] = "Practice";
+}
+
+<h1>Practice</h1>
+
+@foreach(var item in Model){
+    @* modelがどうしてパラメーターになっているのかわからない。ViewModel？ *@
+    <div>@Html.DisplayFor(model => item.Title)</div>
+    <div>@Html.DisplayFor(model => item.Name)</div>
+}
+
+
