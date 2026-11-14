@@ -30,12 +30,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Memo)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UpdatedAt)
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -49,7 +43,12 @@
                 @Html.DisplayFor(model => item.Title)
             </td>
             <td>
-                @Html.DisplayFor(model => item.Tags)
+                @* item.TagsのデータはList形式。Listに保存されているタグを全て表示したい *@
+                @* @Html.DisplayFor(model => item.Tags) *@
+                    @foreach(var tag in item.Tags)
+                    {
+                        <span class="badge text-bg-primary">#@Html.DisplayFor(model => tag.Name)</span>
+                    }
             </td>
             <td>
                 @Html.DisplayFor(model => item.Content)
@@ -59,12 +58,6 @@
             </td>
             <td>
                 @Html.DisplayFor(model => item.Memo)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.CreatedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.UpdatedAt)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

@@ -52,7 +52,9 @@ public class StudyRecordController : Controller
     // GET: STUDYRECORDS
     public async Task<IActionResult> Index()
     {
-        return View(await _context.StudyRecord.ToListAsync());
+        // DBからStudyRecordテーブルを取得します。
+        // DBには保存されていないけど、ナビゲーションプロパティとして追加されているTagsも含めて取得します　という意味？
+        return View(await _context.StudyRecord.Include(item => item.Tags).ToListAsync());
     }
 
     // GET: STUDYRECORDS/Details/5
@@ -86,8 +88,16 @@ public class StudyRecordController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create([Bind("Id,StudyDate,Title,Tags,Content,Learned,Memo,CreatedAt,UpdatedAt")] StudyRecord studyrecord)
     {
+        // ModelStateは入力値とかエラーとかが記録されている
+        // IsValidは有効ですか？Yes👉️True
         if (ModelState.IsValid)
         {
+            // 作成時間と更新時間を入力
+            // nowは2回使うから、最初に作っておくといい（天才✨️）
+            var now = DateTime.Now;
+            studyrecord.CreatedAt = now;
+            studyrecord.UpdatedAt = now;
+
             _context.Add(studyrecord);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
