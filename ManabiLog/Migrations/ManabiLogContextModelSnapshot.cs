@@ -21,24 +21,6 @@ namespace ManabiLog.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ManabiLog.Models.JunctionTableModel", b =>
-                {
-                    b.Property<int>("StudyRecordsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TagsId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("AddedTagAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("StudyRecordsId", "TagsId");
-
-                    b.HasIndex("TagsId");
-
-                    b.ToTable("StudyRecordTag", (string)null);
-                });
-
             modelBuilder.Entity("ManabiLog.Models.StudyRecord", b =>
                 {
                     b.Property<int>("Id")
@@ -91,23 +73,34 @@ namespace ManabiLog.Migrations
                     b.ToTable("Tag");
                 });
 
-            modelBuilder.Entity("ManabiLog.Models.JunctionTableModel", b =>
+            modelBuilder.Entity("StudyRecordTag", b =>
                 {
-                    b.HasOne("ManabiLog.Models.StudyRecord", "studyRecord")
+                    b.Property<int>("StudyRecordsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TagsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("StudyRecordsId", "TagsId");
+
+                    b.HasIndex("TagsId");
+
+                    b.ToTable("StudyRecordTag");
+                });
+
+            modelBuilder.Entity("StudyRecordTag", b =>
+                {
+                    b.HasOne("ManabiLog.Models.StudyRecord", null)
                         .WithMany()
                         .HasForeignKey("StudyRecordsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ManabiLog.Models.Tag", "tag")
+                    b.HasOne("ManabiLog.Models.Tag", null)
                         .WithMany()
                         .HasForeignKey("TagsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("studyRecord");
-
-                    b.Navigation("tag");
                 });
 #pragma warning restore 612, 618
         }
