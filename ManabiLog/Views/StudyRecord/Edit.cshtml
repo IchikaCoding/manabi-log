@@ -29,14 +29,16 @@
                 @* 👉️TagsのListから一件ずつ取得する *@
                 @*  *@
                 @* <input asp-for="Tags" class="form-control" /> *@
+                <fieldset>
+                    @* TODO: Tags[i].Nameのiはないから直す *@
+                    <legend asp-for="Tags[i].Name" class="control-label">Tag</legend>
                     @for(var i=0; i < Model.Tags.Count; i++)
                     {
                         @* TagのIDがasp-forの名前になっている *@
                        <input type="hidden" asp-for="Tags[i].Id"/> 
-                       @* どうしてか、ラベルがNameになった *@
-                       <label asp-for="Tags[i].Name" class="control-label">Tag</label>
                        <input asp-for="Tags[i].Name" class="form-control"/> 
                     }
+                </fieldset>
                 <span asp-validation-for="Tags" class="text-danger"></span>
             </div>
             <div class="form-group">

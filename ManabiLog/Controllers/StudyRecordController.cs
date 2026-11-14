@@ -49,6 +49,29 @@ public class StudyRecordController : Controller
     //     return View(logNameList);
     // }
 
+    public async Task CreatSeedData()
+    {
+        // ここにListのTagを作る
+        Tag tag1 = new Tag()
+        {
+            Name = "DB"
+        };
+        Tag tag2 = new Tag()
+        {
+            Name = "さつまいも"
+        }; ;
+        var now = DateTime.Now;
+        StudyRecord record = new StudyRecord
+        {
+            StudyDate = DateOnly.FromDateTime(DateTime.Today),
+            Title = "いちか丼を学んだ",
+            Tags = new List<Tag> { tag1, tag2 },
+            CreatedAt = now,
+            UpdatedAt = now
+        };
+        _context.StudyRecord.Add(record);
+        await _context.SaveChangesAsync();
+    }
     // GET: STUDYRECORDS
     public async Task<IActionResult> Index()
     {
