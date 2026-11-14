@@ -113,7 +113,7 @@ public class StudyRecordController : Controller
             return NotFound();
         }
 
-        var studyrecord = await _context.StudyRecord.FindAsync(id);
+        var studyrecord = await _context.StudyRecord.Include(record => record.Tags).FirstOrDefaultAsync(record => record.Id == id);
         if (studyrecord == null)
         {
             return NotFound();
@@ -137,6 +137,8 @@ public class StudyRecordController : Controller
         {
             try
             {
+                var now = DateTime.Now;
+                studyrecord.UpdatedAt = now;
                 _context.Update(studyrecord);
                 await _context.SaveChangesAsync();
             }
