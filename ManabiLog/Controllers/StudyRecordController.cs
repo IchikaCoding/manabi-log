@@ -34,7 +34,7 @@ public class StudyRecordController : Controller
         // 〇〇のリストを作成する
         var list = await _context.StudyRecordTags.Include(item => item.studyRecord).Include(item => item.tag).ToListAsync();
         // ! Listにデータ入れたら画面に表示できそう
-        var array = new List<ViewModel>();
+        var logNameList = new List<ViewModel>();
         // 〇〇から一つずつデータ取得
         foreach (JunctionTableModel item in list)
         {
@@ -44,9 +44,9 @@ public class StudyRecordController : Controller
             var viewModel = new ViewModel();
             viewModel.Title = title;
             viewModel.Name = name;
-            array.Add(viewModel);
+            logNameList.Add(viewModel);
         }
-        return View(array);
+        return View(logNameList);
     }
 
     // GET: STUDYRECORDS
