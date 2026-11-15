@@ -109,12 +109,26 @@ public class StudyRecordController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,StudyDate,Title,Tags,Content,Learned,Memo,CreatedAt,UpdatedAt")] StudyRecord studyrecord)
+    public async Task<IActionResult> Create([Bind("Id,StudyDate,Title,Tags,Content,Learned,Memo,CreatedAt,UpdatedAt")] StudyRecord studyrecord, string? tagInput)
     {
+        if (string.IsNullOrWhiteSpace(tagInput))
+        {
+            ModelState.AddModelError(
+                "TagInput", "タグを入力してください"
+            );
+        }
         // ModelStateは入力値とかエラーとかが記録されている
         // IsValidは有効ですか？Yes👉️True
         if (ModelState.IsValid)
         {
+            // ここでtagInput変数を使用したい
+            // studyrecordのTagsのListに保存したい
+            var tagObj = new Tag()
+            {
+                // どうしてここでNull参照の可能性が出てくるの？
+                Name = tagInput
+            };
+            studyrecord.Tags = new List<Tag> { tagObj };
             // 作成時間と更新時間を入力
             // nowは2回使うから、最初に作っておくといい（天才✨️）
             var now = DateTime.Now;

@@ -26,9 +26,10 @@
             </div>
 
             <div class="form-group">
-                <label asp-for="Tags" class="control-label"></label>
-                <input asp-for="Tags" class="form-control" />
-                <span asp-validation-for="Tags" class="text-danger"></span>
+                <label for="TagInput" class="control-label">Tags</label>
+                <input name="TagInput" class="form-control" id="TagInput" value="@ViewData.ModelState["TagInput"]?.AttemptedValue" />
+                @* <span asp-validation-for="Tags" class="text-danger"></span> *@
+                @Html.ValidationMessage("TagInput", null, new{@class = "text-danger"})
             </div>
 
             <div class="form-group">
