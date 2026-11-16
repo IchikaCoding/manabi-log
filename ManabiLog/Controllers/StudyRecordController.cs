@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ManabiLog.Models;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.VisualBasic;
 
 public class StudyRecordController : Controller
 {
@@ -163,36 +165,55 @@ public class StudyRecordController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
+    // TODO: どうやってIdをもらってきたの？
     public async Task<IActionResult> Edit(int? id, [Bind("Id,StudyDate,Title,Tags,Content,Learned,Memo,CreatedAt,UpdatedAt")] StudyRecord studyrecord)
     {
-        if (id != studyrecord.Id)
+        try
         {
-            return NotFound();
-        }
-
-        if (ModelState.IsValid)
-        {
-            try
+            if (id != studyrecord.Id)
             {
-                var now = DateTime.Now;
-                studyrecord.UpdatedAt = now;
-                _context.Update(studyrecord);
-                await _context.SaveChangesAsync();
+                return NotFound();
             }
-            catch (DbUpdateConcurrencyException)
+            if (!ModelState.IsValid)
             {
-                if (!StudyRecordExists(studyrecord.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return View(studyrecord);
             }
+            var dbStudyRecord = await _context.StudyRecord.Include(record => record.Tags).FirstOrDefaultAsync(record => record.Id == studyrecord.Id);
+            if (dbStudyRecord == null)
+            {
+                return NotFound();
+            }
+            dbStudyRecord.Title = studyrecord.Title;
+            dbStudyRecord.Content = studyrecord.Content;
+            dbStudyRecord.Learned = studyrecord.Learned;
+            dbStudyRecord.Memo = studyrecord.Memo;
+            dbStudyRecord.UpdatedAt = DateTime.Now;
+            foreach (var tag in studyrecord.Tags)
+            {
+                // 入力値のタグ1件のIDとDBのタグ（List）のIDが一致するものを取って来る。
+                // それで、入力値のデータで上書き
+                var dbTag = dbStudyRecord.Tags.FirstOrDefault(item => item.Id == tag.Id);
+                if (dbTag == null)
+                {
+                    return BadRequest();
+                }
+                dbTag.Name = tag.Name;
+            }
+            _context.Update(dbStudyRecord);
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-        return View(studyrecord);
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!StudyRecordExists(studyrecord.Id))
+            {
+                return NotFound();
+            }
+            else
+            {
+                throw;
+            }
+        }
     }
 
     // GET: STUDYRECORDS/Delete/5
