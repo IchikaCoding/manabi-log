@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using ManabiLog.Models;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.VisualBasic;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 public class StudyRecordController : Controller
 {
@@ -170,38 +171,51 @@ public class StudyRecordController : Controller
     {
         try
         {
+            // IDが無い時があるらしい
             if (id != studyrecord.Id)
             {
-                return NotFound();
+                NotFound();
             }
+            // StudyRecordがあるのかどうかを確認
             if (!ModelState.IsValid)
             {
-                return View(studyrecord);
+                return View();
             }
-            var dbStudyRecord = await _context.StudyRecord.Include(record => record.Tags).FirstOrDefaultAsync(record => record.Id == studyrecord.Id);
+
+            // DBのデータを取得する
+            var dbStudyRecord = await _context.StudyRecord.Include(record => record.Tags).FirstOrDefaultAsync(record => record.Id == id);
             if (dbStudyRecord == null)
             {
                 return NotFound();
             }
+            // DBのデータを入力値で上書き
             dbStudyRecord.Title = studyrecord.Title;
             dbStudyRecord.Content = studyrecord.Content;
             dbStudyRecord.Learned = studyrecord.Learned;
             dbStudyRecord.Memo = studyrecord.Memo;
             dbStudyRecord.UpdatedAt = DateTime.Now;
+            // タグはListだからforeachとかでぐるぐる回す、1件ずつ更新させる
             foreach (var tag in studyrecord.Tags)
             {
-                // 入力値のタグ1件のIDとDBのタグ（List）のIDが一致するものを取って来る。
-                // それで、入力値のデータで上書き
-                var dbTag = dbStudyRecord.Tags.FirstOrDefault(item => item.Id == tag.Id);
+                // TODO: tagは必須項目だからこの確認が必要かわからない
+                if (tag == null)
+                {
+                    NotFound();
+                }
+                // tagのIDと一致するデータをDBから取得する
+                Tag dbTag = dbStudyRecord.Tags.FirstOrDefault(item => item.Id == tag.Id);
                 if (dbTag == null)
                 {
-                    return BadRequest();
+                    NotFound();
                 }
+                // 取得したデータを入力値で上書き
                 dbTag.Name = tag.Name;
             }
-            _context.Update(dbStudyRecord);
+            // 上書きしたデータをDBに反映させる
+            // _context.Add(dbStudyRecord);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+            // ! もしかしたらTagを編集した場合、IDが一致するほかのタグまで更新されちゃうかも。
         }
         catch (DbUpdateConcurrencyException)
         {
