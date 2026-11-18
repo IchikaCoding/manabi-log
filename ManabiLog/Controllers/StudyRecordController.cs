@@ -114,11 +114,13 @@ public class StudyRecordController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create([Bind("Id,StudyDate,Title,Tags,Content,Learned,Memo,CreatedAt,UpdatedAt")] StudyRecord studyrecord, string? tagInput)
     {
+        // コンパイラーには、`null` が入らないと確認できないらしい。だからreturnを書かないと` Name = tagInput`で警告になる
         if (string.IsNullOrWhiteSpace(tagInput))
         {
             ModelState.AddModelError(
                 "TagInput", "タグを入力してください"
             );
+            return View(studyrecord);
         }
         // ModelStateは入力値とかエラーとかが記録されている
         // IsValidは有効ですか？Yes👉️True
@@ -129,6 +131,7 @@ public class StudyRecordController : Controller
             var tagObj = new Tag()
             {
                 // どうしてここでNull参照の可能性が出てくるの？
+                // 手前のif文で早期リターンしていなかったから。
                 Name = tagInput
             };
             studyrecord.Tags = new List<Tag> { tagObj };
@@ -174,7 +177,7 @@ public class StudyRecordController : Controller
             // IDが無い時があるらしい
             if (id != studyrecord.Id)
             {
-                NotFound();
+                return NotFound();
             }
             // StudyRecordがあるのかどうかを確認
             if (!ModelState.IsValid)
@@ -200,13 +203,14 @@ public class StudyRecordController : Controller
                 // TODO: tagは必須項目だからこの確認が必要かわからない
                 if (tag == null)
                 {
-                    NotFound();
+                    return NotFound();
                 }
                 // tagのIDと一致するデータをDBから取得する
-                Tag dbTag = dbStudyRecord.Tags.FirstOrDefault(item => item.Id == tag.Id);
+                // ! FirstOrDefaultは一致するデータがない場合null（シーケンスが消す既定値）を返す！
+                Tag? dbTag = dbStudyRecord.Tags.FirstOrDefault(item => item.Id == tag.Id);
                 if (dbTag == null)
                 {
-                    NotFound();
+                    return NotFound();
                 }
                 // 取得したデータを入力値で上書き
                 dbTag.Name = tag.Name;
