@@ -13,6 +13,7 @@
     <thead>
         <tr>
             <th>
+                @* modelはStudyRecord モデル *@
                 @Html.DisplayNameFor(model => model.StudyDate)
             </th>
             <th>
@@ -37,6 +38,8 @@
 @foreach (var item in Model) {
         <tr>
             <td>
+                @* 引数 model の型は IEnumerable<StudyRecord>らしい *@
+                @* DisplayForの引数は、@model で指定した型になる *@
                 @Html.DisplayFor(model => item.StudyDate)
             </td>
             <td>

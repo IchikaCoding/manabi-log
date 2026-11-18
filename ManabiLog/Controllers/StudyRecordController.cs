@@ -217,6 +217,8 @@ public class StudyRecordController : Controller
             }
             // 上書きしたデータをDBに反映させる
             // _context.Add(dbStudyRecord);
+            // ExecuteUpdate を使う方法（EF Core 7.0以降）もあるよ。
+            // _context.Update(dbStudyRecord);をしない理由は、上書きしたプロパティだけ自動で更新したいから。
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
             // ! もしかしたらTagを編集した場合、IDが一致するほかのタグまで更新されちゃうかも。
@@ -270,5 +272,18 @@ public class StudyRecordController : Controller
     private bool StudyRecordExists(int? id)
     {
         return _context.StudyRecord.Any(e => e.Id == id);
+    }
+    // TagのIDでアクセスした時にDBからTagテーブルを参照して、データを渡す
+    // Viewでデータを受け取ったらTagのViewにTagデータを表示する
+    public async Task<IActionResult> Tag(int? id)
+    {
+        var recordFromDb = await _context.StudyRecord.Include(record => record.Tags).FirstOrDefaultAsync(record => record.Id == id);
+        if (recordFromDb == null)
+        {
+            return NotFound();
+        }
+        // どうしてか、List<Tags>?だとTagsがないと言われます。どうして？
+        var tagsFromDb = recordFromDb.Tags;
+        return View();
     }
 }
