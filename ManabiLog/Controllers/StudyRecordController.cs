@@ -283,7 +283,29 @@ public class StudyRecordController : Controller
             return NotFound();
         }
         // どうしてか、List<Tags>?だとTagsがないと言われます。どうして？
-        var tagsFromDb = recordFromDb.Tags;
-        return View();
+        var tagListFromDb = recordFromDb.Tags;
+        return View(tagListFromDb);
+    }
+    public async Task<IActionResult> Practice(int id)
+    {
+        // FindAsync を使って、主キーが id の学習記録を取得してください
+        // var log = await _context.StudyRecord.FindAsync(id);
+        // if (log == null)
+        // {
+        //     return NotFound();
+        // }
+        // return View(log);
+
+        // var log = await _context.StudyRecord.FirstOrDefaultAsync(record => record.Id == id);
+        // return View(log);
+        // ここでクエリ実行する👉️EF Coreの追跡に入る👉️この時点でstateはDetachedで追跡中になる。
+        var log = await _context.StudyRecord.Include(record => record.Tags).FirstOrDefaultAsync(record => record.Id == id);
+        if (log == null)
+        {
+            return NotFound();
+        }
+        // ここではDBを修正していないので、StateはUnchangedになる。
+        var state = _context.Entry(log).State;
+        return View(log);
     }
 }

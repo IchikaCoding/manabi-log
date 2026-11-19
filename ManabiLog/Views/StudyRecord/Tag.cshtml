@@ -1,1 +1,28 @@
+@model IEnumerable<ManabiLog.Models.Tag>
+
 <h1>Modelとmodelの違いを学んだから自分で書いてみようの会</h1>
+
+@* 受け取ったデータ（tagのList）をここに表示したい *@
+
+@* Controllerから受け取ったデータをここに表示 *@
+@* ModelはList形式 *@
+
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Id)</th>
+            <th>@Html.DisplayNameFor(model => model.Name)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var tag in Model)
+        {
+            <tr>
+            <td>@Html.DisplayFor(studyRecord => tag.Id)</td>
+            <td>@Html.DisplayFor(studyRecordModel =>tag.Name)</td>
+            </tr>
+        }
+    </tbody>
+</table>
