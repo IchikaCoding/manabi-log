@@ -1,9 +1,12 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace ManabiLog.Models
 {
     // staticにはしない。複数のタグを持つ設定だから。
     public class Tag
     {
         public int Id { get; set; }
+        [StringLength(25, ErrorMessage = "{0}文字以上{1}文字以内で入力してください。")]
         public string Name { get; set; } = "";
         // どうして空のListを作成するの？
         // 👉️null許容で作成すると、List自体がnullの可能性がある。nullの場合、Listの中身見るforeachの処理とかでNullReferenceExceptionのエラーでプログラムが落ちる。
