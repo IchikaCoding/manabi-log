@@ -71,3 +71,9 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+
+@* ここは何だったんだ？Jqueryはどうして必要だったのか？ *@
+@* サーバー側の処理をブラウザに反映する処理として必要だから。 *@
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

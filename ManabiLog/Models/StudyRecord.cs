@@ -6,7 +6,7 @@ namespace ManabiLog.Models
     {
         public int Id { get; set; }
         public DateOnly StudyDate { get; set; }
-
+        [Required(ErrorMessage = "タイトルは必須項目です！")]
         // エラーがでたときにModelStateに記録したいメッセージ（？）
         [StringLength(50, ErrorMessage = "{0}は{1}文字以内で入力してください。文字数が多すぎます。")]
         public string Title { get; set; } = "";
