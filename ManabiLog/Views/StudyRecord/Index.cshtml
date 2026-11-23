@@ -26,81 +26,65 @@
                 @Html.DisplayNameFor(model => model.Content)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Learned)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Memo)
+                Button
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
-        <tr>
-            <td>
-                @* 引数 model の型は IEnumerable<StudyRecord>らしい *@
-                @* DisplayForの引数は、@model で指定した型になる *@
-                @Html.DisplayFor(model => item.StudyDate)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Title)
-            </td>
-            <td>
+    <tr data-detail-id="study-detail-@item.Id">
+        <td>
+            @* 引数 model の型は IEnumerable<StudyRecord>らしい *@
+            @* DisplayForの引数は、@model で指定した型になる *@
+            @Html.DisplayFor(model => item.StudyDate)
+        </td>
+        <td>
+            @Html.DisplayFor(model => item.Title)
+        </td>
+        <td>
+            @* item.TagsのデータはList形式。Listに保存されているタグを全て表示したい *@
+            @* @Html.DisplayFor(model => item.Tags) *@
+                @foreach(var tag in item.Tags)
+                {
+                    <span class="badge text-bg-primary">#@Html.DisplayFor(model => tag.Name)</span>
+                }
+        </td>
+        <td>
+            @Html.DisplayFor(model => item.Content)
+        </td>
+        <td>
+            @Html.DisplayFor(model => item.Learned)
+        </td>
+        <td>
+            @Html.DisplayFor(model => item.Memo)
+        </td>
+        <td>
+            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+        </td>
+    </tr>
+    <tr class="" id="study-details-@item.Id" hidden>
+        <td colspan="6">
+            @* 引数 model の型は IEnumerable<StudyRecord>らしい *@
+            @* DisplayForの引数は、@model で指定した型になる *@
+            @Html.DisplayFor(model => item.StudyDate)
+            @Html.DisplayFor(model => item.Title)
                 @* item.TagsのデータはList形式。Listに保存されているタグを全て表示したい *@
-                @* @Html.DisplayFor(model => item.Tags) *@
-                    @foreach(var tag in item.Tags)
-                    {
-                        <span class="badge text-bg-primary">#@Html.DisplayFor(model => tag.Name)</span>
-                    }
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Content)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Learned)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Memo)
-            </td>
-            <td>
+            @* @Html.DisplayFor(model => item.Tags) *@
+                @foreach(var tag in item.Tags)
+                {
+                    <span class="badge text-bg-primary">#@Html.DisplayFor(model => tag.Name)</span>
+                }
+            @Html.DisplayFor(model => item.Content)
+            @Html.DisplayFor(model => item.Learned)
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-         </tr>
-        <tr>
-            <td colspan="7">
-                <div clsss="collapse">
-                <td>
-                @Html.DisplayFor(model => item.Title)
-                
-            </td>
-            <td>
-                @* item.TagsのデータはList形式。Listに保存されているタグを全て表示したい *@
-                @* @Html.DisplayFor(model => item.Tags) *@
-                    @foreach(var tag in item.Tags)
-                    {
-                        <span class="badge text-bg-primary">#@Html.DisplayFor(model => tag.Name)</span>
-                    }
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Content)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Learned)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Memo)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                @* TODO: ここをどこに入れたらいいのかわかりません *@
-                <button>詳細を表示</button>
-            </td>
-            </div>
-        </tr>
+            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+        </td>
+    </tr>
+        
                 
 }
     </tbody>
