@@ -1,6 +1,7 @@
 // JSのコード理解してみる
 document.querySelectorAll("tr[data-detail-id]").forEach((row) => {
   row.addEventListener("click", (event) => {
+    // TODO: どうしてここではevent.targetなのに、`const targetElId = row.dataset.detailId;`だとrowを使うの？
     // リンクが押されたら処理省略
     if (event.target.closest("a")) return;
     // const el = event.target;
