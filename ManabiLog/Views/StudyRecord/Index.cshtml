@@ -60,12 +60,12 @@
             @Html.DisplayFor(model => item.Memo)
         </td>
         <td>
-            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            <a asp-action="Edit" id="1" asp-route-id="@item.Id">Edit</a> |
+            <a asp-action="Details" id="2" asp-route-id="@item.Id">Details</a> |
+            <a asp-action="Delete" id="3" asp-route-id="@item.Id">Delete</a>
         </td>
     </tr>
-    <tr class="" id="study-details-@item.Id" hidden>
+    <tr class="" id="study-detail-@item.Id" hidden>
         <td colspan="6">
             @* 引数 model の型は IEnumerable<StudyRecord>らしい *@
             @* DisplayForの引数は、@model で指定した型になる *@
