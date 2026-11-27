@@ -99,7 +99,13 @@
         @* データの中身を追加↓ *@
     </div>
 </div>
-@* 
-@section DetailScripts{
-    @{await Html.RenderPartialAsync("study_record_index");}
+
+<script src="~/js/practice.js"></script>
+
+@* TODO: JavaScriptをファイル指定して読み込みたい *@
+@* wwwrootは、アプリのURLの起点となっているから、このファイルを指定するとブラウザ側はこのディレクトリ把握出来なくて４０４になってしまうらしい *@
+@* @section DetailScripts{
+    <script src="~/js/study-record-index.js"></script>
 } *@
+
+

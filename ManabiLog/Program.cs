@@ -21,7 +21,7 @@ app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseAuthorization();
-
+// ここで静的ファイルを公開しているらしい
 app.MapStaticAssets();
 
 app.MapControllerRoute(
